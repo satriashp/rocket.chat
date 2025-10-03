@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rocketchat
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+
+  source:
+    chart: rocketchat
+    repoURL: https://rocketchat.github.io/helm-charts
+    targetRevision: v6.25.3
+    helm:
+      releaseName: rocketchat
+      valuesObject:
+        image:
+          tag: 7.10.0 # Set the Rocket.Chat release
+
+        mongodb:
+          image:
+            repository: bitnamilegacy/mongodb
+          volumePermissions:
+            image:
+              repository: bitnamilegacy/os-shell
+          metrics:
+            image:
+              repository: bitnamilegacy/mongodb-exporter
+
+          auth:
+            passwords:
+              - rocketchat
+            rootPassword: rocketchatroot
+          persistence:
+            storageClass: local-path-persistent
+
+        host: rocketchat.satriashp.cloud  # Replace with your Rocket.Chat domain
+
+        extraEnv:
+          - name: INITIAL_USER
+            value: "true"
+          - name: ADMIN_USERNAME
+            value: admin
+          - name: ADMIN_EMAIL
+            value: admin@satriashp.cloud
+          - name: ADMIN_PASS
+            value: admin
+
+
+  destination:
+    name: "in-cluster"
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
