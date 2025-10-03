@@ -14,8 +14,12 @@ spec:
     targetRevision: v1.18.2
     helm:
       releaseName: cert-manager
-      valuesFiles:
-        - $values/argocd/apps/cert-manager/values.yaml
+      valuesObject:
+        crds:
+          enabled: true
+        prometheus:
+          enabled: false
+
 
   destination:
     name: "in-cluster"
