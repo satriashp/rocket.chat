@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: certificates
+spec:
+  project: rocketchat
+  source:
+    path: argocd/apps/certificates
+    repoURL: 'https://github.com/satriashp/rocket.chat'
+    targetRevision: main
+
+  destination:
+    namespace: default
+    server: 'in-cluster'
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

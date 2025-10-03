@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: rocketchat
+
+  source:
+    chart: cert-manager
+    repoURL: quay.io/jetstack/charts
+    targetRevision: v1.18.2
+    helm:
+      releaseName: cert-manager
+      valuesFiles:
+        - values.yaml
+
+  destination:
+    name: "in-cluster"
+    namespace: cert-manager
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

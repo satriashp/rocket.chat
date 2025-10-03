@@ -1,0 +1,45 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: rocket.chat
+
+servers: 1
+agents: 2
+
+kubeAPI:
+  host: "localhost"
+  hostIP: "127.0.0.1"
+  hostPort: "6445"
+
+image: rancher/k3s:v1.31.5-k3s1
+
+# network: k3d
+subnet: "172.28.0.0/16"
+
+volumes:
+  - volume: /home/shp/Work/rocket.chat/data:/var/lib/rancher/k3s/storage
+    nodeFilters:
+      - all
+
+# files:
+#   - source: |
+#       apiVersion: v1
+#       kind: Namespace
+#       metadata:
+#         name: argocd
+#     destination: /var/lib/rancher/k3s/server/manifests/argocd-namespace.yaml
+
+ports:
+  - port: 0.0.0.0:80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 0.0.0.0:443:443
+    nodeFilters:
+      - loadbalancer
+
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
