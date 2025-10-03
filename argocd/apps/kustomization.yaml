@@ -1,0 +1,4 @@
+resources:
+  - cert-manager/application.yaml
+  - certificates/application.yaml
+  - traefik/application.yaml
