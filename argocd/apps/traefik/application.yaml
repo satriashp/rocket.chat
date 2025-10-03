@@ -15,7 +15,7 @@ spec:
     helm:
       releaseName: traefik
       valueFiles:
-        - values.yaml
+        - $values/argocd/apps/cert-manager/values.yaml
 
   destination:
     name: "in-cluster"
