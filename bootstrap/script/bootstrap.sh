@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# Get the absolute path of the directory where this script lives
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 CLUSTER_NAME="rocket.chat"
 ARGOCD_NAMESPACE="argocd"
 ARGOCD_VERSION="v3.1.7"
@@ -12,7 +15,7 @@ if k3d cluster list | grep -q "^${CLUSTER_NAME}"; then
   echo "✅ Cluster '${CLUSTER_NAME}' already exists, skipping creation."
 else
   echo "⏳ Creating cluster '${CLUSTER_NAME}'..."
-  k3d cluster create "${CLUSTER_NAME}" --config ../../k3d.yaml
+  k3d cluster create "${CLUSTER_NAME}" --config $SCRIPT_DIR/../../k3d.yaml
 fi
 
 # Create namespace for ArgoCD if not exists
@@ -53,5 +56,5 @@ echo "🎉 Bootstrap complete! ArgoCD is running in namespace '${ARGOCD_NAMESPAC
 
 echo
 echo "Initiate main application ..."
-kubectl apply -f ../../argocd/project.yaml
-# kubectl apply -f ../../argocd/main.yaml
+kubectl apply -f $SCRIPT_DIR/../../argocd/project.yaml
+kubectl apply -f $SCRIPT_DIR/../../argocd/main.yaml
