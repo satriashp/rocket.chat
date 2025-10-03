@@ -32,8 +32,6 @@ spec:
             passwords:
               - rocketchat
             rootPassword: rocketchatroot
-          persistence:
-            storageClass: local-path-persistent
 
         host: rocketchat.satriashp.cloud  # Replace with your Rocket.Chat domain
 
