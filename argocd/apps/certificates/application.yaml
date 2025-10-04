@@ -8,7 +8,7 @@ spec:
   project: rocketchat
   source:
     path: argocd/apps/certificates
-    repoURL: 'https://github.com/satriashp/rocket.chat'
+    repoURL: https://github.com/satriashp/rocket.chat
     targetRevision: main
 
   destination:

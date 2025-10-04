@@ -8,43 +8,45 @@ metadata:
 spec:
   project: rocketchat
 
-  source:
-    chart: rocketchat
-    repoURL: https://rocketchat.github.io/helm-charts
-    targetRevision: v6.25.3
-    helm:
-      releaseName: rocketchat
-      valuesObject:
-        image:
-          tag: 7.10.0 # Set the Rocket.Chat release
-
-        mongodb:
+  sources:
+    - repoURL: https://rocketchat.github.io/helm-charts
+      chart: rocketchat
+      targetRevision: v6.25.3
+      helm:
+        releaseName: rocketchat
+        valuesObject:
           image:
-            repository: bitnamilegacy/mongodb
-          volumePermissions:
+            tag: 7.10.0 # Set the Rocket.Chat release
+
+          mongodb:
             image:
-              repository: bitnamilegacy/os-shell
-          metrics:
-            image:
-              repository: bitnamilegacy/mongodb-exporter
+              repository: bitnamilegacy/mongodb
+            volumePermissions:
+              image:
+                repository: bitnamilegacy/os-shell
+            metrics:
+              image:
+                repository: bitnamilegacy/mongodb-exporter
 
-          auth:
-            passwords:
-              - rocketchat
-            rootPassword: rocketchatroot
+            auth:
+              passwords:
+                - rocketchat
+              rootPassword: rocketchatroot
 
-        host: chat.satriashp.cloud  # Replace with your Rocket.Chat domain
+          host: chat.satriashp.cloud  # Replace with your Rocket.Chat domain
 
-        extraEnv:
-          - name: INITIAL_USER
-            value: "true"
-          - name: ADMIN_USERNAME
-            value: admin
-          - name: ADMIN_EMAIL
-            value: admin@satriashp.cloud
-          - name: ADMIN_PASS
-            value: admin
-
+          extraEnv:
+            - name: INITIAL_USER
+              value: "true"
+            - name: ADMIN_USERNAME
+              value: admin
+            - name: ADMIN_EMAIL
+              value: admin@satriashp.cloud
+            - name: ADMIN_PASS
+              value: admin
+    - repoURL: https://github.com/satriashp/rocket.chat
+      targetRevision: main
+      path: argocd/apps/rocketchat/httproute
 
   destination:
     name: "in-cluster"
