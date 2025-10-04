@@ -15,13 +15,6 @@ spec:
     helm:
       releaseName: traefik
       valuesObject:
-        ingressRoute:
-          dashboard:
-            enabled: true
-            matchRule: Host(`dashboard.satriashp.cloud`)
-            entryPoints:
-              - web
-
         providers:
           kubernetesIngress:
             enabled: false
@@ -43,7 +36,7 @@ spec:
               namespacePolicy:
                 from: All
               certificateRefs:
-                - name: satriashp-cloud-tls
+                - name: domain-tls
                   kind: Secret
                   group: ""
 
