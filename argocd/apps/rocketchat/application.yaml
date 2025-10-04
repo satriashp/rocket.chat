@@ -33,7 +33,7 @@ spec:
               - rocketchat
             rootPassword: rocketchatroot
 
-        host: rocketchat.satriashp.cloud  # Replace with your Rocket.Chat domain
+        host: chat.satriashp.cloud  # Replace with your Rocket.Chat domain
 
         extraEnv:
           - name: INITIAL_USER
