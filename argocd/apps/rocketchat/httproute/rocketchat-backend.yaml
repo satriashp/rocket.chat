@@ -10,7 +10,7 @@ spec:
       group: gateway.networking.k8s.io
       sectionName: websecure
   hostnames:
-    - "chat.satriashp.cloud"
+    - "rocketchat.satriashp.cloud"
   rules:
     - matches:
         - path:
