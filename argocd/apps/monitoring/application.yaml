@@ -23,28 +23,9 @@ spec:
           grafana:
             defaultDashboardsTimezone: Asia/Jakarta
 
-            route:
-              main:
-                enabled: true
-                parentRefs:
-                  - name: traefik-gateway
-                    kind: Gateway
-                    group: gateway.networking.k8s.io
-                    sectionName: websecure
-                hostnames:
-                  - grafana.satriashp.cloud
-                rules:
-                  - matches:
-                      - path:
-                          type: PathPrefix
-                          value: /
-                    backendRefs:
-                      - name: monitoring-grafana
-                        port: 80
-
-    - repoURL: https://github.com/satriashp/rocket.chat
-      targetRevision: main
-      path: argocd/apps/monitoring/httproute
+    # - repoURL: https://github.com/satriashp/rocket.chat
+    #   targetRevision: main
+    #   path: argocd/apps/monitoring/httproute
 
   destination:
     name: "in-cluster"
