@@ -34,11 +34,11 @@ spec:
               podMonitorSelector:
                 matchExpressions:
                   - key: release
-                    operator: in
+                    operator: In
                     values:
                       - monitoring
                   - key: app.kubernetes.io/name
-                    operator: in
+                    operator: In
                     values:
                       - rocketchat
 
