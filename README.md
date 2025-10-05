@@ -27,6 +27,14 @@ The goal is to demonstrate:
 │   │   │   ├── kustomization.yaml
 │   │   │   └── lets-encrypt-cluster-issuer.yaml
 │   │   ├── kustomization.yaml
+│   │   ├── monitoring
+│   │   │   ├── application.yaml
+│   │   │   ├── dashboard
+│   │   │   │   └── rocketchat.yaml
+│   │   │   └── httproute
+│   │   │       ├── grafana-backend.yaml
+│   │   │       ├── grafana-redirect.yaml
+│   │   │       └── referencesgrant.yaml
 │   │   ├── rocketchat
 │   │   │   ├── application.yaml
 │   │   │   └── httproute
@@ -43,9 +51,20 @@ The goal is to demonstrate:
 │       ├── README.md
 │       ├── main.tf
 │       ├── outputs.tf
+│       ├── providers.tf
+│       ├── script
+│       │   └── wait_for_deployment.sh
 │       └── variables.tf
 ├── data
-└── k3d.yaml
+├── k3d.yaml
+└── tools
+    ├── manifests
+    │   ├── configmap.yaml
+    │   ├── cronjob.yaml
+    │   └── pvc.yaml
+    ├── mongodump.sh
+    ├── mongorestore.sh
+    └── notes.md
 
 ```
 ---
