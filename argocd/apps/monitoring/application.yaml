@@ -15,11 +15,6 @@ spec:
       helm:
         releaseName: monitoring
         valuesObject:
-          defaultRules:
-            create: false
-          alertmanager:
-            enabled: false
-
           crds:
             enabled: true
             upgradeJob:
@@ -28,16 +23,9 @@ spec:
 
           grafana:
             defaultDashboardsTimezone: Asia/Jakarta
-            folders:
-              rocketchat:
-                - name: "rocketchat"
-                  id: "rocketchat"
-            dashboards:
-              rocketchat:
-                - name: "rocketchat-metrics"
-                  folder: "rocketchat"
-                  id: "23428"
-                  revision: latest
+            sidecar:
+              dashboards:
+                enabled: true
 
           prometheus:
             prometheusSpec:
@@ -48,6 +36,10 @@ spec:
     - repoURL: https://github.com/satriashp/rocket.chat
       targetRevision: main
       path: argocd/apps/monitoring/httproute
+
+    - repoURL: https://github.com/satriashp/rocket.chat
+      targetRevision: main
+      path: argocd/apps/monitoring/dashboard
 
   destination:
     name: "in-cluster"
