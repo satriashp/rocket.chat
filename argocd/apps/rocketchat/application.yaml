@@ -44,6 +44,7 @@ spec:
               value: admin@satriashp.cloud
             - name: ADMIN_PASS
               value: admin
+
     - repoURL: https://github.com/satriashp/rocket.chat
       targetRevision: main
       path: argocd/apps/rocketchat/httproute

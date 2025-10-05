@@ -8,59 +8,43 @@ metadata:
 spec:
   project: rocketchat
 
-  source:
-    path: .
-    repoURL: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-    targetRevision: 77.13.0
-    helm:
-      releaseName: monitoring
-      valuesObject:
-        defaultRules:
-          create: false
-        alertmanager:
-          enabled: false
+  sources:
+    - path: .
+      repoURL: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+      targetRevision: 77.13.0
+      helm:
+        releaseName: monitoring
+        valuesObject:
+          defaultRules:
+            create: false
+          alertmanager:
+            enabled: false
 
-        grafana:
-          defaultDashboardsTimezone: Asia/Jakarta
+          grafana:
+            defaultDashboardsTimezone: Asia/Jakarta
 
-          route:
-            main:
-              enabled: true
-              parentRefs:
-                - name: traefik-gateway
-                  kind: Gateway
-                  group: gateway.networking.k8s.io
-                  sectionName: websecure
-              hostnames:
-                - grafana.satriashp.cloud
-              rules:
-                - matches:
-                    - path:
-                        type: PathPrefix
-                        value: /
-                  backendRefs:
-                    - name: monitoring-grafana
-                      port: 80
+            route:
+              main:
+                enabled: true
+                parentRefs:
+                  - name: traefik-gateway
+                    kind: Gateway
+                    group: gateway.networking.k8s.io
+                    sectionName: websecure
+                hostnames:
+                  - grafana.satriashp.cloud
+                rules:
+                  - matches:
+                      - path:
+                          type: PathPrefix
+                          value: /
+                    backendRefs:
+                      - name: monitoring-grafana
+                        port: 80
 
-            redirect:
-              enabled: true
-              parentRefs:
-                - name: traefik-gateway
-                  kind: Gateway
-                  group: gateway.networking.k8s.io
-                  sectionName: web
-              hostnames:
-                - grafana.satriashp.cloud
-              rules:
-                - matches:
-                    - path:
-                        type: PathPrefix
-                        value: /
-                  filters:
-                    - type: RequestRedirect
-                      requestRedirect:
-                        schema: https
-                        statusCode: 301
+    - repoURL: https://github.com/satriashp/rocket.chat
+      targetRevision: main
+      path: argocd/apps/monitoring/httproute
 
   destination:
     name: "in-cluster"
