@@ -20,6 +20,12 @@ spec:
           alertmanager:
             enabled: false
 
+          crds:
+            enabled: true
+            upgradeJob:
+              enabled: true
+              forceConflicts: true
+
           grafana:
             defaultDashboardsTimezone: Asia/Jakarta
 
