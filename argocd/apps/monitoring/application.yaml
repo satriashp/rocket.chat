@@ -29,9 +29,22 @@ spec:
           grafana:
             defaultDashboardsTimezone: Asia/Jakarta
 
-    # - repoURL: https://github.com/satriashp/rocket.chat
-    #   targetRevision: main
-    #   path: argocd/apps/monitoring/httproute
+          prometheus:
+            prometheusSpec:
+              podMonitorSelector:
+                matchExpressions:
+                  - key: release
+                    operator: in
+                    values:
+                      - monitoring
+                  - key: app.kubernetes.io/name
+                    operator: in
+                    values:
+                      - rocketchat
+
+    - repoURL: https://github.com/satriashp/rocket.chat
+      targetRevision: main
+      path: argocd/apps/monitoring/httproute
 
   destination:
     name: "in-cluster"
