@@ -1,0 +1,82 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rocketchat-backup
+  namespace: default
+spec:
+  schedule: "0 2 * * *"   # 02:00 UTC every day
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: mongodump
+            # image: your-registry/mongodbtools:latest
+            image: docker.io/bitnamilegacy/mongodb:6.0.10-debian-11-r8
+            command: ["sh"]
+            args: ["/usr/local/bin/mongodump.sh"]
+            env:
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rocketchat-rocketchat
+                  key: mongo-uri
+            volumeMounts:
+            - name: backups
+              mountPath: /data
+            - name: mongo-script
+              mountPath: /usr/local/bin/mongodump.sh
+              subPath: mongodump.sh
+              readOnly: true
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: rocketchat-backup-pvc
+            - name: mongo-script
+              configMap:
+                name: mongo-script
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rocketchat-restore
+  namespace: default
+spec:
+  suspend: true
+  schedule: "0 2 * * *"   # ignore since suspend: true
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: mongorestore
+            # image: your-registry/mongodbtools:latest
+            image: docker.io/bitnamilegacy/mongodb:6.0.10-debian-11-r8
+            command: ["sh"]
+            args: ["/usr/local/bin/mongorestore.sh"]
+            env:
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rocketchat-rocketchat
+                  key: mongo-uri
+            volumeMounts:
+            - name: backups
+              mountPath: /data
+            - name: mongo-script
+              mountPath: /usr/local/bin/mongorestore.sh
+              subPath: mongorestore.sh
+              readOnly: true
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: rocketchat-backup-pvc
+            - name: mongo-script
+              configMap:
+                name: mongo-script
