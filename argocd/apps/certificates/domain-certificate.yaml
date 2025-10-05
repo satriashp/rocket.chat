@@ -13,3 +13,4 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - "rocketchat.satriashp.cloud"
+    - "grafana.satriashp.cloud"
