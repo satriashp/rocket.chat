@@ -28,19 +28,22 @@ spec:
 
           grafana:
             defaultDashboardsTimezone: Asia/Jakarta
+            folders:
+              rocketchat:
+                - name: "rocketchat"
+                  id: "rocketchat"
+            dashboards:
+              rocketchat:
+                - name: "rocketchat-metrics"
+                  folder: "rocketchat"
+                  id: "23428"
+                  revision: latest
 
           prometheus:
             prometheusSpec:
               podMonitorSelector:
-                matchExpressions:
-                  - key: release
-                    operator: In
-                    values:
-                      - monitoring
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - rocketchat
+                serviceMonitorSelectorNilUsesHelmValues: false
+                podMonitorSelectorNilUsesHelmValues: false
 
     - repoURL: https://github.com/satriashp/rocket.chat
       targetRevision: main
