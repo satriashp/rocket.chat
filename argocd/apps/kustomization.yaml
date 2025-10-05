@@ -3,3 +3,4 @@ resources:
   - certificates/application.yaml
   - traefik/application.yaml
   - rocketchat/application.yaml
+  - monitoring/application.yaml
