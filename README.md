@@ -1,4 +1,4 @@
-# 🚀 Rocket.Chat GitOps Demo with k3d + ArgoCD
+# 🚀 Rocket.Chat GitOps Demo with k3d + ArgoCD + Kubernetes Operator (with kubebuilder)
 
 This repository demonstrates a **GitOps-based deployment** of [Rocket.Chat](https://www.rocket.chat/) using [ArgoCD](https://argo-cd.readthedocs.io/) Core component on a local [k3d](https://k3d.io/) Kubernetes cluster.
 
@@ -9,6 +9,7 @@ The goal is to demonstrate:
 - Using sync waves to enforce dependencies (cert-manager → Traefik → Rocket.Chat)
 - Handling DNS/SSL certificates with cert-manager + Cloudflare DNS01 challenge
 - Idempotent bootstrap scripting
+- Basic understanding of Kubernetes Operator concepts
 
 ---
 
@@ -57,6 +58,74 @@ The goal is to demonstrate:
 │       └── variables.tf
 ├── data
 ├── k3d.yaml
+├── rocketchat-backup-operator
+│   ├── Dockerfile
+│   ├── Makefile
+│   ├── PROJECT
+│   ├── README.md
+│   ├── api
+│   │   └── v1alpha1
+│   │       ├── groupversion_info.go
+│   │       ├── rocketchatbackup_types.go
+│   │       └── zz_generated.deepcopy.go
+│   ├── bin
+│   ├── cmd
+│   │   └── main.go
+│   ├── config
+│   │   ├── crd
+│   │   │   ├── bases
+│   │   │   │   └── apps.satriashp.cloud_rocketchatbackups.yaml
+│   │   │   ├── kustomization.yaml
+│   │   │   └── kustomizeconfig.yaml
+│   │   ├── default
+│   │   │   ├── cert_metrics_manager_patch.yaml
+│   │   │   ├── kustomization.yaml
+│   │   │   ├── manager_metrics_patch.yaml
+│   │   │   └── metrics_service.yaml
+│   │   ├── manager
+│   │   │   ├── configmap.yaml
+│   │   │   ├── kustomization.yaml
+│   │   │   ├── manager.yaml
+│   │   │   └── pvc.yaml
+│   │   ├── network-policy
+│   │   │   ├── allow-metrics-traffic.yaml
+│   │   │   └── kustomization.yaml
+│   │   ├── prometheus
+│   │   │   ├── kustomization.yaml
+│   │   │   ├── monitor.yaml
+│   │   │   └── monitor_tls_patch.yaml
+│   │   ├── rbac
+│   │   │   ├── kustomization.yaml
+│   │   │   ├── leader_election_role.yaml
+│   │   │   ├── leader_election_role_binding.yaml
+│   │   │   ├── metrics_auth_role.yaml
+│   │   │   ├── metrics_auth_role_binding.yaml
+│   │   │   ├── metrics_reader_role.yaml
+│   │   │   ├── rocketchatbackup_admin_role.yaml
+│   │   │   ├── rocketchatbackup_editor_role.yaml
+│   │   │   ├── rocketchatbackup_viewer_role.yaml
+│   │   │   ├── role.yaml
+│   │   │   ├── role_binding.yaml
+│   │   │   └── service_account.yaml
+│   │   └── samples
+│   │       ├── apps_v1alpha1_rocketchatbackup.yaml
+│   │       ├── kustomization.yaml
+│   │       └── restore_job.yaml
+│   ├── go.mod
+│   ├── go.sum
+│   ├── hack
+│   │   └── boilerplate.go.txt
+│   ├── internal
+│   │   └── controller
+│   │       ├── rocketchatbackup_controller.go
+│   │       ├── rocketchatbackup_controller_test.go
+│   │       └── suite_test.go
+│   └── test
+│       ├── e2e
+│       │   ├── e2e_suite_test.go
+│       │   └── e2e_test.go
+│       └── utils
+│           └── utils.go
 └── tools
     ├── manifests
     │   ├── configmap.yaml
@@ -114,6 +183,19 @@ The repo configures:
 
 ---
 
+## 🚀 Kubernetes Operator
+1. 🛠 Build and Deploy the Operator
+    ```bash
+    make docker-build docker-push IMG=<your-registry>/rocketchat-operator:latest
+    make deploy IMG=<your-registry>/rocketchat-operator:latest
+    ```
+2. 📄 Apply sample a Backup Custom Resource
+    ```bash
+    kubectl apply -f rocketchat-backup-operator/config/samples/apps_v1alpha1_rocketchatbackup.yaml
+    ```
+    This will create a simple RocketChatBackup resource that triggers a basic backup job in the cluster. It’s a minimal demo to illustrate how a Kubernetes Operator can work.
+
+
 ## ⚠️ Known Limitations
 This setup is for demo purposes only.
 Some limitations to be aware of:
@@ -149,6 +231,7 @@ This project is intended as a portfolio piece to demonstrate:
 * Helm-based application management
 * Handling SSL/TLS certificates via DNS provider
 * Awareness of real-world production considerations and trade-offs
+* Understanding the basic and practical concept of Kubernetes Operator
 
 ## Maintainer
 
