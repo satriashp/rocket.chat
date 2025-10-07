@@ -1,0 +1,11 @@
+apiVersion: apps.satriashp.cloud/v1alpha1
+kind: RocketChatBackup
+metadata:
+  labels:
+    app.kubernetes.io/name: rocketchat-backup-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: rocketchatbackup-sample
+  namespace: rocketchat-backup-operator-system
+spec:
+  schedule: "*/5 * * * *"
+  mongoURI: "mongodb://rocketchat:rocketchat@rocketchat-mongodb-headless.default:27017/rocketchat?replicaSet=rs0"

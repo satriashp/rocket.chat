@@ -18,7 +18,7 @@ spec:
             command: ["sh"]
             args: ["/usr/local/bin/mongodump.sh"]
             env:
-            - name: MONGO_URL
+            - name: MONGO_URI
               valueFrom:
                 secretKeyRef:
                   name: rocketchat-rocketchat

@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rocketchat-restore
+  namespace: rocketchat-backup-operator-system
+spec:
+  suspend: true
+  schedule: "0 2 * * *"   # ignore since suspend: true
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: mongorestore
+            image: docker.io/bitnamilegacy/mongodb:6.0.10-debian-11-r8
+            command: ["sh"]
+            args: ["/usr/local/bin/mongorestore.sh"]
+            env:
+            - name: MONGO_URI
+              value: mongodb://rocketchat:rocketchat@rocketchat-mongodb-headless.default:27017/rocketchat?replicaSet=rs0
+
+            volumeMounts:
+            - name: backups
+              mountPath: /data
+            - name: mongo-script
+              mountPath: /usr/local/bin/mongorestore.sh
+              subPath: mongorestore.sh
+              readOnly: true
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: rocketchat-backup-operator-rocketchat-backup-pvc
+            - name: mongo-script
+              configMap:
+                name: rocketchat-backup-operator-mongo-script

@@ -17,7 +17,7 @@ image: rancher/k3s:v1.31.5-k3s1
 subnet: "172.28.0.0/16"
 
 volumes:
-  - volume: /home/shp/Work/rocket.chat/data:/var/lib/rancher/k3s/storage
+  - volume: ${PWD}/data:/var/lib/rancher/k3s/storage
     nodeFilters:
       - all
 
@@ -36,6 +36,39 @@ ports:
   - port: 0.0.0.0:443:443
     nodeFilters:
       - loadbalancer
+
+registries:
+  create:
+    name: registry.localhost
+    host: "0.0.0.0"
+    hostPort: "5000"
+    # proxy:
+    #   remoteURL: https://registry-1.docker.io # mirror the DockerHub registry
+    #   username: ""
+    #   password: ""
+    volumes:
+      - ${PWD}/data/registry:/var/lib/registry # persist registry data locally
+
+  config: | # define contents of the `registries.yaml` file (or reference a file); same as `--registry-config /path/to/config.yaml`
+    mirrors:
+      "docker.io":
+        endpoint:
+          - "http://registry.localhost:5000"
+      "registry.k8s.io":
+        endpoint:
+          - "http://registry.localhost:5000"
+      "quay.io":
+        endpoint:
+          - "http://registry.localhost:5000"
+      "public.ecr.aws":
+        endpoint:
+          - "http://registry.localhost:5000"
+      "rancher":
+        endpoint:
+          - "http://registry.localhost:5000"
+      "registry.rocket.chat":
+        endpoint:
+          - "http://registry.localhost:5000"
 
 options:
   k3s:
