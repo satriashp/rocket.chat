@@ -14,6 +14,8 @@ The goal is to demonstrate:
 ---
 
 ## 📂 Repository Structure
+<details>
+    <summary>Click to expand repository folders and files</summary>
 
 ```
 .
@@ -136,6 +138,9 @@ The goal is to demonstrate:
     └── notes.md
 
 ```
+> This is a basic structure for demonstration purposes.
+
+</details>
 ---
 
 ## ⚙️ Prerequisites
